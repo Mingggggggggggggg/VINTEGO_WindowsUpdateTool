@@ -31,18 +31,17 @@ def checkCPU():
         #print(arch)
         
         if (coreCount < minCPUCores):
-            error.append(f"Ungenügende CPU Kerne -- Tatsächlich {coreCount}")
+            error.append(f"Ungenügende CPU Kerne -- Tatsächlich {coreCount}; Erforderlich {minCPUCores}")
         if (maxFreq < minCPUSpeed):
-            error.append(f"Ungenügende CPU Geschwindigkeit -- Tatsächlich {maxFreq} MHz")
+            error.append(f"Ungenügende CPU Geschwindigkeit -- Tatsächlich {maxFreq} MHz; Erforderlich {minCPUSpeed}")
         if (arch != minCPUArch):
-            error.append(f"Falsche Architektur -- Tatsächlich: {arch} Erforderlich: {minCPUArch} ")
+            error.append(f"Falsche Architektur -- Tatsächlich: {arch} Erforderlich: {minCPUArch} ") 
             
-
-            return False        
-        
-        else:
+        if (coreCount >= minCPUCores and maxFreq >= minCPUSpeed and arch == minCPUArch):
             print("CPU Mindestanforderungen sind erfüllt")
             return True
+        else:
+            return False
         
 
     except Exception as e:
@@ -59,11 +58,6 @@ def checkRAM():
             error.append(f"Ungenügend Arbeitsspeicher -- Tatsächlich {totalRAM}")
             
             
-        if error:
-            print("Arbeitsspeicheranforderungen nicht erfüllt.")
-            for err in error:
-                print(err)
-            return False  
         
         else:
             print("Arbeitsspeicheranforderungen erfüllt")
@@ -81,10 +75,15 @@ def checkStorage():
         
         if (diskSpace < minStorageSize):
             error.append(f"Ungenügender Speicherplatz - Tatsächlich {diskSpace}")
+            
+        else:
+            print("Speicheranforderungen erfüllt")
+            return True
 
     
     except Exception as e:
         print(f"Fehler: {str(e)}")
+        return False
 
 
 def checkSecureBoot():
