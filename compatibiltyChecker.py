@@ -3,6 +3,7 @@ import json
 import locale
 import platform
 import subprocess
+import sys
 import psutil
 import wmi
 import winreg
@@ -17,6 +18,7 @@ minRAMSize = 4
 minStorageSize = 64
 isTPUEnabled = True
 isSecureBootEnabled = True
+minOSBuildTarget = 19041
 logPath = "./"
 error = []
 
@@ -166,11 +168,21 @@ def checkGPU():
 
 # Windows 10 Buildversion 2004 oder höher 
 def checkOSVersion():
-    OSVer = platform.version()
-    print(OSVer)
-    
-    #TODO
-    pass
+    try:
+        version = sys.getwindowsversion()
+        build = version.build  # z.B. 19041 für Windows 10 Version 2004
+        print(f"Buildnummer: {build}")
+
+        if build >= minOSBuildTarget:
+            print("Windows-Version ist ausreichend (Build 2004 oder höher)")
+            return True
+        else:
+            error.append(f"Windows-Version zu alt -- Build {build}; erforderlich mindestens 19041 (Version 2004)")
+            return False
+
+    except Exception as e:
+        print(f"Fehler beim Prüfen der Windows-Version: {e}")
+        return False
 
 '''
 # Optional
@@ -194,6 +206,7 @@ if __name__ == "__main__":
     checkStorage()
     checkTPM()
     print(checkSecureBoot())
+    checkOSVersion()
     
     #TODO Log error Daten
     if error:
