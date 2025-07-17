@@ -1,11 +1,9 @@
 # https://www.microsoft.com/en-us/windows/windows-11-specifications
 import json
-import locale
 import platform
 import subprocess
 import sys
 import psutil
-import wmi
 import winreg
 
 
