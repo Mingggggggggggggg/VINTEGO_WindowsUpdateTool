@@ -6,7 +6,7 @@ import sys
 import psutil
 import winreg
 import ctypes
-
+import logger
 
 
 ## Minimal Requirements
@@ -20,7 +20,7 @@ isSecureBootEnabled = True
 minOSBuildTarget = 19041
 logPath = "./"
 error = []
-error.append("==== Protokolldaten ====")
+error.append("-------- Kompatibilitätscheck Log --------")
 
 
 def checkCPU():
@@ -105,7 +105,11 @@ def checkSecureBoot():
         return False
 
 def checkTPM():
-    getTpmInfo()
+    hasTPM = getTpmInfo()
+    if hasTPM:
+        return True
+    else:
+        return False
     #getTpmVersion() # Versionsfindung nicht möglich
 
 def getTpmInfo():
@@ -144,7 +148,7 @@ def getTpmInfo():
         return True if tpm_present and tpm_enabled else False
 
     except subprocess.TimeoutExpired:
-        error.append("PowerShell-Antwort auf Get-Tpm hat zu lange gedauert.")
+        error.append("PowerShell-Antwort auf Get-Tpm hat zu lange gedauert oder ist nicht vorhanden")
         return False
     except subprocess.CalledProcessError:
         error.append("TPM nicht verfügbar oder Zugriff verweigert.")
@@ -201,11 +205,11 @@ def checkOSVersion():
         build = version.build  # z.B. 19041 für Windows 10 Version 2004
         error.append(f"Buildnummer: {build}")
 
-        if build >= minOSBuildTarget:
+        if (build >= minOSBuildTarget) and (build < 22000):
             error.append("Windows-Version ist ausreichend (Build 2004 oder höher)")
             return True
         else:
-            error.append(f"Windows-Version zu alt -- Build {build}; erforderlich mindestens 19041 (Version 2004)")
+            error.append(f"Windows-Version zu alt oder Windows 11 ist bereits installiert-- Build {build}; erforderlich mindestens 19041 (Version 2004) und unter 22000")
             return False
 
     except Exception as e:
@@ -219,8 +223,19 @@ def checkInternetCon():
 '''
 
 def totalCheck():
-    if (checkCPU() and checkRAM() and checkStorage()
-        and checkSecureBoot() and checkTPM() and checkOSVersion()):
+    checks = {
+        "CPU": checkCPU(),
+        "RAM": checkRAM(),
+        "Storage": checkStorage(),
+        "Secure Boot": checkSecureBoot(),
+        "TPM": checkTPM(),
+        "OS Version": checkOSVersion()
+    }
+
+    for name, result in checks.items():
+        error.append(f"{name} Check: {' erfüllt' if result else ' nicht erfüllt'}")
+
+    if all(checks.values()):
         return True
     else:
         error.append("Nicht alle Anforderungen erfüllt")
@@ -228,17 +243,10 @@ def totalCheck():
 
 # MAIN
 def initCheck():
-    checkCPU()
-    checkRAM()
-    checkStorage()
-    checkTPM()
-    checkSecureBoot()
-    checkOSVersion()
-    #print(bool(totalCheck))
-    
-    #TODO Log error Daten
+    result = totalCheck()
+
     if error:
-        error.append("==== Protokolldaten ====")
-        for err in error:
-            print(err)
+        logger.logMessages(error)
+
+    return result  
    
