@@ -2,6 +2,7 @@ import sys
 import checkComp as cc
 import getFile
 import logger
+import mountInstall
 
 
 
@@ -19,10 +20,8 @@ def main():
     
     
 
-    
-
     result = cc.initCheck()
-    result = True
+    #result = True
     if result:
         log.append("Alles kompatibel. Starte ISO Transfer")
     else:
@@ -41,13 +40,16 @@ def main():
         log.append(f"Zielpfad: {targetPath}")
         log.append(f"Dateinamen: {fileName}")
 
-
+    gotFile = False
     if result:
         try:
-            getFile.initGetFile(downloadPath=downloadPath, fileName=fileName, targetPath=targetPath)
+            gotFile = getFile.initGetFile(downloadPath=downloadPath, fileName=fileName, targetPath=targetPath)
         except Exception as e:
             log.append(f"Fehler beim Transfer: {e}")
-            
+    
+    
+    if gotFile:
+        mountInstall.initMountAndInstall(targetPath=targetPath, fileName=fileName)
     logger.logMessages(log)
 
     

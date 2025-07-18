@@ -5,6 +5,7 @@ import logger
 
 log = []
 log.append("-------------------Transfer Log---------------------")
+
 def hashFile(fullPath):
     hashstr = hl.sha256()
     with open(fullPath, "rb") as f:
@@ -56,6 +57,7 @@ def getFile(downloadPath, fileName, targetPath):
 
 
 def initGetFile(downloadPath, fileName, targetPath):    
-    getFile(downloadPath=downloadPath, fileName=fileName,targetPath=targetPath)
+    result = getFile(downloadPath=downloadPath, fileName=fileName,targetPath=targetPath)
     logger.logMessages(log)
+    return result
     
