@@ -5,6 +5,7 @@ import subprocess
 import sys
 import psutil
 import winreg
+import ctypes
 
 
 
@@ -19,6 +20,7 @@ isSecureBootEnabled = True
 minOSBuildTarget = 19041
 logPath = "./"
 error = []
+error.append("==== Protokolldaten ====")
 
 
 def checkCPU():
@@ -71,10 +73,10 @@ def checkRAM():
 def checkStorage():
     try:
         diskSpace = psutil.disk_usage("C:")[2] / (1024**3) # Umrechnung von bytes zu gigabytes
-        error.append(diskSpace)
         
         if (diskSpace < minStorageSize):
             error.append(f"Ungenügender Speicherplatz - Tatsächlich {diskSpace}")
+            return False
             
         else:
             error.append("Speicheranforderungen erfüllt")
@@ -107,32 +109,53 @@ def checkTPM():
     #getTpmVersion() # Versionsfindung nicht möglich
 
 def getTpmInfo():
+    # Prüfe auf Adminrechte
+    if not ctypes.windll.shell32.IsUserAnAdmin():
+        error.append("Programm benötigt Administratorrechte für TPM-Abfrage.")
+        return False
+
     try:
         cmd = ["powershell", "-Command", "Get-Tpm | ConvertTo-Json"]
-        output = subprocess.check_output(cmd, stderr=subprocess.DEVNULL)
+
+        # Timeout setzen (z. B. 5 Sekunden)
+        output = subprocess.check_output(cmd, stderr=subprocess.DEVNULL, timeout=5)
 
         try:
             decoded = output.decode('utf-8')
         except UnicodeDecodeError:
             decoded = output.decode('cp850')  # OEM-Codepage
-            
-        if "Administratorberechtigungen" in decoded:
-            error.append("Fehlende Adminrechte")
-            return 
+
+        # Leere Ausgabe oder kein JSON
+        if not decoded.strip():
+            error.append("Keine TPM-Daten empfangen (PowerShell-Ausgabe leer).")
+            return False
 
         data = json.loads(decoded)
 
-        error.append(f"TPM vorhanden: {data.get('TpmPresent')}")
-        error.append(f"TPM aktiviert: {data.get('TpmEnabled')}")
-        print(data.get('TpmPresent'))
-        return True
-        
+        # Prüfen, ob sinnvolle Werte drin sind
+        tpm_present = data.get('TpmPresent')
+        tpm_enabled = data.get('TpmEnabled')
+
+        error.append(f"TPM vorhanden: {tpm_present}")
+        error.append(f"TPM aktiviert: {tpm_enabled}")
+
+        #print(f"TPM vorhanden: {tpm_present}")
+
+        return True if tpm_present and tpm_enabled else False
+
+    except subprocess.TimeoutExpired:
+        error.append("PowerShell-Antwort auf Get-Tpm hat zu lange gedauert.")
+        return False
     except subprocess.CalledProcessError:
         error.append("TPM nicht verfügbar oder Zugriff verweigert.")
+        return False
+    except json.JSONDecodeError:
+        error.append("Fehler beim Parsen der TPM-Daten (ungültiges JSON).")
         return False
     except Exception as e:
         error.append(f"Fehler beim Auslesen des TPM-Status: {e}")
         return False
+
 
 
 def getTpmVersion():
@@ -209,12 +232,13 @@ def initCheck():
     checkRAM()
     checkStorage()
     checkTPM()
-    error.append(checkSecureBoot())
+    checkSecureBoot()
     checkOSVersion()
+    #print(bool(totalCheck))
     
     #TODO Log error Daten
     if error:
-        error.append("CPU Mindestanforderungen nicht erfüllt.")
+        error.append("==== Protokolldaten ====")
         for err in error:
-            error.append(err)
+            print(err)
    
