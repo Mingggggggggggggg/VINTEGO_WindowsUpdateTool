@@ -14,7 +14,7 @@ def mountAndInstall(ISOPath):
         powershell_script = f'''
         $ISOPath = "{ISOPath}"
         $MountPoint = (Mount-DiskImage -ImagePath $ISOPath -PassThru | Get-Volume).DriveLetter + ":"
-        $SetupPath = "$MountPoint\\setup.exe"
+        $SetupPath = "$MountPoint\\CPU_Z_2_16_EN.exe"
         $Args = "{args}"
         Start-Process -FilePath $SetupPath -ArgumentList $Args -Wait
         '''
@@ -27,9 +27,9 @@ def mountAndInstall(ISOPath):
         log.append(f"Fehler beim Mounten oder Installieren: {e}")
         return False
         
-def initMountAndInstall(filePath, fileName):
+def initMountAndInstall(targetPath, fileName):
     if not fileName:
-        iso_files = [f for f in os.listdir(filePath) if f.lower().endswith(".iso")]
+        iso_files = [f for f in os.listdir(targetPath) if f.lower().endswith(".iso")]
         if len(iso_files) == 1:
             fileName = iso_files[0]
             log.append(f"Kein Dateiname übergeben. Verwende ISO: {fileName}")
@@ -42,7 +42,7 @@ def initMountAndInstall(filePath, fileName):
             logger.logMessages(log)
             return False   
         
-    fullTargetPath = os.path.join(filePath, fileName)
+    fullTargetPath = os.path.join(targetPath, fileName)
     isSuccessfull = mountAndInstall(fullTargetPath)
     logger.logMessages(log)
     return isSuccessfull
