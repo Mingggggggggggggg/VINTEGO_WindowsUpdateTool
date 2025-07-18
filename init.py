@@ -1,5 +1,6 @@
 import sys
 import checkComp as cc
+import getFile
 
 def main():
 
@@ -14,11 +15,15 @@ def main():
     #TODO Übergabeparamter einbinden
     if len(sys.argv) > 1:
         downloadPath = sys.argv[1]            
-        targetPath = sys.argv[2]            
-        logPath = sys.argv[3]
+        targetPath = sys.argv[2]  
+        fileName = sys.argv[3]          
+        logPath = sys.argv[4]
         
     else:
         print("Keine Parameter übergeben")
+        
+    if result:
+        getFile.getFile(downloadPath, fileName, targetPath=r"C:\VINTEGO-Technik\Installer")
 
     
 
