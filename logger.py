@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 
-def logMessages(data, folderPath="C:\VINTEGO-Technik\Logs", fileName="log.txt"):
+def logMessages(data, folderPath=r"C:\VINTEGO-Technik\Logs", fileName="log.txt"):
     # Ordner erstellen, falls nicht vorhanden
     os.makedirs(folderPath, exist_ok=True)
     

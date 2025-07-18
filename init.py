@@ -1,29 +1,54 @@
 import sys
 import checkComp as cc
 import getFile
+import logger
+
+
+
+
+log = []
+log.append("---------------- Global Log ----------------")
+
 
 def main():
 
-    # Pfadübergabe simulieren -- Kein Check, ob es ein Pfad ist, nur String
+    # Standardwerte
+    downloadPath = r"C:\Users\Praktikant WHV\Downloads"
+    targetPath = r"C:\VINTEGO-Technik\Installer"
+    fileName = "" 
+    
+    
+
+    
+
     result = cc.initCheck()
+    result = True
+    if result:
+        log.append("Alles kompatibel. Starte ISO Transfer")
+    else:
+        log.append("Anfoderungen nicht erfüllt")
+        
+
+    if len(sys.argv) >= 3:
+        downloadPath = sys.argv[1]
+        targetPath = sys.argv[2]
+        if len(sys.argv) > 3:
+            fileName = sys.argv[3]       
+        
+    else:
+        log.append("Fehlende Parameter")
+        log.append(f"Downloadpfad: {downloadPath}")
+        log.append(f"Zielpfad: {targetPath}")
+        log.append(f"Dateinamen: {fileName}")
+
 
     if result:
-        print("Alles kompatibel. Starte ISO Transfer")
-    else:
-        print("Anfoderungen nicht erfüllt")
-        
-    #TODO Übergabeparamter einbinden
-    if len(sys.argv) > 1:
-        downloadPath = sys.argv[1]            
-        targetPath = sys.argv[2]  
-        fileName = sys.argv[3]          
-        logPath = sys.argv[4]
-        
-    else:
-        print("Keine Parameter übergeben")
-        
-    if result:
-        getFile.getFile(downloadPath, fileName, targetPath=r"C:\VINTEGO-Technik\Installer")
+        try:
+            getFile.initGetFile(downloadPath=downloadPath, fileName=fileName, targetPath=targetPath)
+        except Exception as e:
+            log.append(f"Fehler beim Transfer: {e}")
+            
+    logger.logMessages(log)
 
     
 
