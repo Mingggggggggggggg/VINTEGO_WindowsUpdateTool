@@ -8,7 +8,7 @@ def logMessages(data, folderPath="C:\VINTEGO-Technik\Logs", fileName="log.txt"):
     fullPath = os.path.join(folderPath, fileName)
     
     with open(fullPath, "a", encoding="utf-8") as file:
-        file.write("\n\n\n --------------------------------------------------------------------------------------------------------\n")
+        file.write(f"\n\n\n --------------------------------------------------------------------------------------------------------\n")
         for i in data:
             timestamp = datetime.now().strftime("%d.%m.%Y %H:%M:%S.%f")[:-3]
             file.write(f"{timestamp}" + "-" + f"{str(i)} "+" \n \n")
