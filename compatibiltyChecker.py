@@ -95,6 +95,7 @@ def checkSecureBoot():
 
     except FileNotFoundError:
         return False
+    
     except Exception as e:
         print(f"Fehler: {str(e)}")
         return False
