@@ -199,7 +199,7 @@ def totalCheck():
 
 
 # MAIN
-if __name__ == "__main__":
+def initCheck():
     checkCPU()
     checkRAM()
     checkStorage()

@@ -1,7 +1,7 @@
-
+import checkComp as cc
 
 def main():
-    pass
+    cc.initCheck()
     
     
 
