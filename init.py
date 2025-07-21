@@ -28,7 +28,7 @@ def main():
 
     result = cc.initCheck()
     # result überschreiben zu Testzwecken
-    result = True
+    #result = True
     if result:
         log.append("Alles kompatibel. Starte ISO Transfer")
     else:
