@@ -4,7 +4,7 @@ import hashlib as hl
 import logger
 
 log = []
-log.append("-------------------Transfer Log---------------------")
+log.append("--------------- Transfer Log ---------------")
 
 def hashFile(fullPath):
     hashstr = hl.sha256()

@@ -120,7 +120,7 @@ def getTpmInfo():
     try:
         cmd = ["powershell", "-Command", "Get-Tpm | ConvertTo-Json"]
 
-        # Timeout setzen (z. B. 5 Sekunden)
+        # Command ausführen und Timer auf 5 Sekunden setzen
         output = subprocess.check_output(cmd, stderr=subprocess.DEVNULL, timeout=5)
 
         try:
@@ -135,7 +135,7 @@ def getTpmInfo():
 
         data = json.loads(decoded)
 
-        # Prüfen, ob sinnvolle Werte drin sind
+        # Prüfeauf Sinnvolle Werte
         tpm_present = data.get('TpmPresent')
         tpm_enabled = data.get('TpmEnabled')
 

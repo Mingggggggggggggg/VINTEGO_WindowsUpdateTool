@@ -1,3 +1,6 @@
+import os
+import sys
+import time
 import checkComp as cc
 import getFile
 import logger
@@ -49,19 +52,32 @@ def main():
         try:
             print("ISO Transfer erfolgreich. Starte mount und Installation.")
             log.append("ISO Transfer erfolgreich. Starte mount und Installation.")
-            mountInstall.initMountAndInstall(targetPath=targetPath, fileName=fileName)
+            isMounted = mountInstall.initMountAndInstall(targetPath=targetPath, fileName=fileName)
         except Exception as e:
             print(f"Fehler beim mount oder Installation: {e}")
             log.append(f"Fehler beim mount oder Installation: {e}") 
     else:
         print("Probleme beim Transfer. Beende Anwendung.")
         log.append("Probleme beim Transfer.")
+        
+    if isMounted:
+        logger.logMessages(log)
+        try:
+            print("Gerät wird in 10 Sekunden neugestartet. STRG + C zum Abbrechen.")
+            time.sleep(10)
+            os.system("shutdown /r /t 0")
+        except KeyboardInterrupt:
+            print("Neustart wurde vom Nutzer abgebrochen.")
 
-    logger.logMessages(log)
+
 
     
 
 # MAIN
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("Anwendung beendet durch Nutzer")
+        sys.exit()
     

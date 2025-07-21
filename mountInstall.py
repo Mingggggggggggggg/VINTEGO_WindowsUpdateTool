@@ -3,7 +3,7 @@ import subprocess
 import logger
 
 log = []
-log.append("-------------------Mount/Install Log---------------------")
+log.append("------------ Mount/Install Log ------------")
 
 args = "/auto upgrade /quiet /noreboot /eula accept /dynamicupdate disable /compat IgnoreWarning"
 
