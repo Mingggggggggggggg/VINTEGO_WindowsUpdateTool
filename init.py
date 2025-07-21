@@ -1,26 +1,33 @@
-import sys
 import checkComp as cc
 import getFile
 import logger
 import mountInstall
-
+import argparse
 
 
 
 log = []
 log.append("---------------- Global Log ----------------")
 
+def getArgs():
+    parser = argparse.ArgumentParser(description="Kopiert ISO Datei von Quellpfad zu Zielpfad und ruft diese im Zielpfad auf und initialisiert eine Installation")
+    parser.add_argument("downloadPath", help="[Pflichtfeld] Pfad zum Downloadverzeichnis")
+    parser.add_argument("--fileName", default="", help="[Optional] Name der ISO-Datei inklusive Datentypendung. Wenn leer sucht einzige .iso Datei im Quellordner")
+    parser.add_argument("--targetPath", default=r"C:\VINTEGO-Technik\Installer", help="[Optional] Zielpfad. Wenn leer: C:\\VINTEGO-Technik\\Installer")
+    return parser.parse_args() 
 
 def main():
 
-    # Standardwerte
-    downloadPath = r"C:\Users\Praktikant WHV\Downloads"
-    targetPath = r"C:\VINTEGO-Technik\Installer"
-    fileName = "" 
+    args = getArgs()
+    downloadPath = args.downloadPath
+    fileName = args.fileName
+    targetPath = args.targetPath
+
     
     
 
     result = cc.initCheck()
+    # result überschreiben zu Testzwecken
     result = True
     if result:
         log.append("Alles kompatibel. Starte ISO Transfer")
@@ -28,17 +35,6 @@ def main():
         log.append("Anfoderungen nicht erfüllt")
         
 
-    if len(sys.argv) >= 3:
-        downloadPath = sys.argv[1]
-        targetPath = sys.argv[2]
-        if len(sys.argv) > 3:
-            fileName = sys.argv[3]       
-        
-    else:
-        log.append("Fehlende Parameter")
-        log.append(f"Downloadpfad: {downloadPath}")
-        log.append(f"Zielpfad: {targetPath}")
-        log.append(f"Dateinamen: {fileName}")
 
     gotFile = False
     if result:

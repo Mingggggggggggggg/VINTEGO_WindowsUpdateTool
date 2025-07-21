@@ -14,7 +14,7 @@ def mountAndInstall(ISOPath):
         powershell_script = f'''
         $ISOPath = "{ISOPath}"
         $MountPoint = (Mount-DiskImage -ImagePath $ISOPath -PassThru | Get-Volume).DriveLetter + ":"
-        $SetupPath = "$MountPoint\\CPU_Z_2_16_EN.exe"
+        $SetupPath = "$MountPoint\\SETUP.exe"
         $Args = "{args}"
         Start-Process -FilePath $SetupPath -ArgumentList $Args -Wait
         '''
