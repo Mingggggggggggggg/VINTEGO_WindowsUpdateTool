@@ -11,5 +11,5 @@ def logMessages(data, folderPath=r"C:\VINTEGO-Technik\Logs", fileName="log.txt")
         file.write(f"\n\n\n --------------------------------------------------------------------------------------------------------\n")
         for i in data:
             timestamp = datetime.now().strftime("%d.%m.%Y %H:%M:%S.%f")[:-3]
-            file.write(f"{timestamp}" + "-" + f"{str(i)} "+" \n \n")
+            file.write(f"{timestamp}" + " - " + f"{str(i)} "+" \n \n")
         file.write("\n --------------------------------------------------------------------------------------------------------\n")
