@@ -19,9 +19,8 @@ def mountAndInstall(ISOPath):
         Start-Process -FilePath $SetupPath -ArgumentList $Args -Wait
         '''
 
-        subprocess.run(["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", powershell_script],
-                       check=True)
-        log.append("ISO gemountet und setup.exe erfolgreich gestartet.")
+        rs = subprocess.run(["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", powershell_script])
+        log.append(f"ISO gemountet und setup.exe gestartet. Rückgabecode: {rs.returncode}")
         return True
     except subprocess.CalledProcessError as e:
         log.append(f"Fehler beim Mounten oder Installieren: {e}")
