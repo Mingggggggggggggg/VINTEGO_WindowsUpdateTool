@@ -59,7 +59,9 @@ def main():
     else:
         print("Probleme beim Transfer. Beende Anwendung.")
         log.append("Probleme beim Transfer.")
-        
+
+# Autoneustart entfernt, da der Installationsprozess asynchron verlaufen kann. -> Neustart während des Updates
+'''
     if isMounted:
         logger.logMessages(log)
         try:
@@ -68,6 +70,7 @@ def main():
             os.system("shutdown /r /t 0")
         except KeyboardInterrupt:
             print("Neustart wurde vom Nutzer abgebrochen.")
+'''
 
 
 
