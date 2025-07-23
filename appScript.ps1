@@ -15,7 +15,7 @@ $exeFile = Join-Path -Path $appPath -ChildPath "Windows10-UpdateTool.exe"
 $logPath = "C:\Users\VINTEGO\Logs\log.txt"
 
 begin {
-
+  # Methode zum Ausführen der Anwendung unter den vorgegebenen Parametern
   function runExec {
     $cmdArgs = @()
     $cmdArgs += $downloadPath
@@ -37,7 +37,8 @@ begin {
     Write-Output "Starte Windows10-UpdateTool Anwendung. Dies kann einen Moment dauern."
     & $exeFile @cmdArgs
   }
-
+  
+  # Methode zum Auslesen der Logs aus einer Textdatei
   function readLogs {
     if (Test-Path $logPath) {
       $log = Get-Content $logPath
@@ -48,6 +49,7 @@ begin {
     }
   }
 
+  # Methode zum herunterladen der exe aus einem Downloadlink
   function getApp {
     if (Test-Path -Path $exeFile) {
       Write-Output "Anwendung bereits vorhanden."
@@ -56,7 +58,7 @@ begin {
       if (-not (Test-Path $appPath)) {
         New-Item -Path $appPath -ItemType Directory | Out-Null
       }
-      Write-Output "Lade Anwendung von $appUrl herunter."
+      Write-Output "Lade Anwendung aus $appUrl herunter"
       Invoke-WebRequest -Uri $appUrl -OutFile $exeFile
 
       if (Test-Path $exeFile) {
