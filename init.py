@@ -60,7 +60,7 @@ def main():
         print("Probleme beim Transfer. Beende Anwendung.")
         log.append("Probleme beim Transfer.")
 
-# Autoneustart entfernt, da der Installationsprozess asynchron verlaufen kann. -> Neustart während des Updates
+# Autoneustart entfernt, da der Installationsprozess asynchron verläuft. -> Neustart während des Updates
 '''
     if isMounted:
         logger.logMessages(log)
