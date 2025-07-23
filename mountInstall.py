@@ -5,7 +5,7 @@ import logger
 log = []
 log.append("------------ Mount/Install Log ------------")
 
-args = "/auto upgrade /quiet /noreboot /eula accept /dynamicupdate disable /compat IgnoreWarning"
+args = "/auto upgrade /quiet /eula accept /dynamicupdate disable /compat IgnoreWarning" # entferne /noreboot aus args
 
 def mountAndInstall(ISOPath):
     
