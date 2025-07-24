@@ -4,28 +4,38 @@ import logger
 
 log = []
 
-args = "/auto upgrade /quiet /eula accept /dynamicupdate disable /compat IgnoreWarning /finalize" # entferne /noreboot aus args
+args = "/auto upgrade /quiet /eula accept /dynamicupdate disable /compat IgnoreWarning"
 
 def mountAndInstall(ISOPath):
-    
     try:
-        # Kombinierter Mount + Laufwerksbuchstabe + Start setup.exe in PowerShell
         powershell_script = f'''
         $ISOPath = "{ISOPath}"
-        $MountPoint = (Mount-DiskImage -ImagePath $ISOPath -PassThru | Get-Volume).DriveLetter + ":"
+        $DiskImage = Mount-DiskImage -ImagePath $ISOPath -PassThru
+        if (-not $DiskImage) {{
+            Write-Error "Mounten der ISO fehlgeschlagen!"
+            exit 1
+        }}
+        $MountPoint = (Get-Volume -DiskImage $DiskImage).DriveLetter + ":"
+        if (-not (Test-Path $MountPoint)) {{
+            Write-Error "Laufwerksbuchstabe nicht gefunden!"
+            exit 1
+        }}
         $SetupPath = "$MountPoint\\SETUP.exe"
-        $Args = "{args}"
-        Start-Process -FilePath $SetupPath -ArgumentList $Args -Wait
+        Start-Process -FilePath $SetupPath -ArgumentList "{args}" -Verb RunAs
         '''
-
-        rs = subprocess.run(["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", powershell_script])
-        log.append(f"ISO gemountet und setup.exe gestartet. Rückgabecode: {rs.returncode}")
+        rs = subprocess.run(
+            ["powershell", "-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", powershell_script],
+            check=True,
+            text=True,
+            capture_output=True
+        )
+        log.append(f"ISO gemountet und setup.exe gestartet. PowerShell-Ausgabe: {rs.stdout}")
         return True
     except subprocess.CalledProcessError as e:
-        log.append(f"Fehler beim Mounten oder Installieren: {e}")
+        log.append(f"Fehler beim Mounten/Installieren: {e.stderr}")
         return False
-        
-def initMountAndInstall(targetPath, fileName):
+
+def initMountAndInstall(targetPath, fileName=None):
     if not fileName:
         iso_files = [f for f in os.listdir(targetPath) if f.lower().endswith(".iso")]
         if len(iso_files) == 1:
@@ -42,5 +52,5 @@ def initMountAndInstall(targetPath, fileName):
         
     fullTargetPath = os.path.join(targetPath, fileName)
     isSuccessfull = mountAndInstall(fullTargetPath)
-    logger.logMessages("Mount/Install",log)
+    logger.logMessages("Mount/Install", log)
     return isSuccessfull
