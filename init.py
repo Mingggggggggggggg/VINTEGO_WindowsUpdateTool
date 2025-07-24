@@ -30,7 +30,7 @@ def main():
 
     result = cc.initCheck()
     # result überschreiben zu Testzwecken
-    result = True
+    #result = True
 
         
     gotFile = False
