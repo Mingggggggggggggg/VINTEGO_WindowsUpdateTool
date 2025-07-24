@@ -3,7 +3,6 @@ import subprocess
 import logger
 
 log = []
-log.append("------------ Mount/Install Log ------------")
 
 args = "/auto upgrade /quiet /eula accept /dynamicupdate disable /compat IgnoreWarning" # entferne /noreboot aus args
 
@@ -43,5 +42,5 @@ def initMountAndInstall(targetPath, fileName):
         
     fullTargetPath = os.path.join(targetPath, fileName)
     isSuccessfull = mountAndInstall(fullTargetPath)
-    logger.logMessages(log)
+    logger.logMessages("Mount/Install",log)
     return isSuccessfull

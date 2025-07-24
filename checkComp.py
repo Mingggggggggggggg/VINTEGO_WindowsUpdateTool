@@ -19,7 +19,6 @@ isTPUEnabled = True
 isSecureBootEnabled = True
 minOSBuildTarget = 19041
 error = []
-error.append("-------- Kompatibilitätscheck Log --------")
 
 
 def checkCPU():
@@ -245,7 +244,7 @@ def initCheck():
     result = totalCheck()
 
     if error:
-        logger.logMessages(error)
+        logger.logMessages("Kompatiblilitätscheck Log",error)
 
     return result  
    

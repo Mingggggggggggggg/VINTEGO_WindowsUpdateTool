@@ -10,11 +10,10 @@ import argparse
 
 
 log = []
-log.append("---------------- Global Log ----------------")
 
 def getArgs():
     parser = argparse.ArgumentParser(description="Kopiert ISO Datei von Quellpfad zu Zielpfad und ruft diese im Zielpfad auf und initialisiert eine Installation")
-    parser.add_argument("downloadPath", help="[Pflichtfeld] Pfad zum Downloadverzeichnis")
+    parser.add_argument("downloadPath", help="[Pflichtfeld] Pfad zum Downloadverzeichnis. Beispiel: C:\\Users\\Praktikant WHV\\Downloads")
     parser.add_argument("--fileName", default="", help="[Optional] Name der ISO-Datei inklusive Datentypendung. Standardmäßig sucht einzige .iso Datei im Quellordner")
     parser.add_argument("--targetPath", default=r"C:\VINTEGO-Technik\Installer", help="[Optional] Zielpfad. Standardmäßig: C:\\VINTEGO-Technik\\Installer")
     return parser.parse_args() 
@@ -31,7 +30,7 @@ def main():
 
     result = cc.initCheck()
     # result überschreiben zu Testzwecken
-    #result = True
+    result = True
 
         
     gotFile = False
@@ -80,6 +79,7 @@ def main():
 if __name__ == "__main__":
     try:
         main()
+        logger.logMessages("Global Log", log)
     except KeyboardInterrupt:
         print("Anwendung beendet durch Nutzer")
         sys.exit()
