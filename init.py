@@ -1,11 +1,10 @@
-import os
 import sys
-import time
 import checkComp as cc
 import getFile
 import logger
 import mountInstall
 import argparse
+import finalizeTool
 
 
 
@@ -25,7 +24,9 @@ def main():
     fileName = args.fileName
     targetPath = args.targetPath
 
-    
+    # Wenn kein Windows 11 System und ISO im targetPath, dann wird ein Installationsfehler angenommen.
+    if finalizeTool.initFinalization(targetPath, fileName):
+        sys.exit(5) # Errorcode 5: Sonderfall, wenn Upgrade erfolgreich oder nicht nötig ist.
     
 
     result = cc.initCheck()
@@ -49,12 +50,13 @@ def main():
     
     if gotFile:
         try:
-            print("ISO Transfer erfolgreich. Starte mount und Installation.")
-            log.append("ISO Transfer erfolgreich. Starte mount und Installation.")
+            print("ISO Transfer erfolgreich. Starte Mount und Installation.")
+            log.append("ISO Transfer erfolgreich. Starte Mount und Installation.")
             isMounted = mountInstall.initMountAndInstall(targetPath=targetPath, fileName=fileName)
+            log.append("Mount und Installation gestartet. Warte auf Autoneustart.")
         except Exception as e:
-            print(f"Fehler beim mount oder Installation: {e}")
-            log.append(f"Fehler beim mount oder Installation: {e}") 
+            print(f"Fehler beim Mount oder Installation: {e}")
+            log.append(f"Fehler beim Mount oder Installation: {e}") 
     else:
         print("Probleme beim Transfer. Beende Anwendung.")
         log.append("Probleme beim Transfer.")
@@ -71,15 +73,12 @@ def main():
             print("Neustart wurde vom Nutzer abgebrochen.")
 '''
 
-
-
-    
-
 # MAIN
 if __name__ == "__main__":
     try:
         main()
-        logger.logMessages("Global Log", log)
+        log.append("Hauptprogramm durchlaufen. Anwendung wird beendet.")
+        logger.logMessages("Global Log", log, top=True)
     except KeyboardInterrupt:
         print("Anwendung beendet durch Nutzer")
         sys.exit()

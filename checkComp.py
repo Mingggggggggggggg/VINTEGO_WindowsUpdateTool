@@ -214,11 +214,6 @@ def checkOSVersion():
         error.append(f"Fehler beim Prüfen der Windows-Version: {e}")
         return False
 
-'''
-# Optional
-def checkInternetCon():
-    pass
-'''
 
 def totalCheck():
     checks = {
