@@ -1,5 +1,5 @@
 $appPath = "C:\VINTEGO-Technik\Tools"
-$appUrl = "https://github.com/Mingggggggggggggg/VINTEGO_WindowsUpdateTool/releases/download/v1.2.4/Windows10-UpdateTool.exe"
+$appUrl = "https://github.com/Mingggggggggggggg/VINTEGO_WindowsUpdateTool/releases/download/v1.4/Windows10-UpdateTool.exe"
 $exeFile = Join-Path -Path $appPath -ChildPath "Windows10-UpdateTool.exe"
 $logPath = "C:\Users\VINTEGO\Logs\W10UpdateToolLog.txt"
 
