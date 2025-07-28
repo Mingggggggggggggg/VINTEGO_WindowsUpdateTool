@@ -46,7 +46,10 @@ def main():
     else:
         print("Kompatibilitätscheck nicht erfolgreich. Beende Anwendung.")
         log.append("Anfoderungen nicht erfüllt")
-    
+        
+    if not gotFile and result:
+        print("ISO-Transfer fehlgeschlagen. Installation wird nicht gestartet.")
+        log.append("ISO-Transfer fehlgeschlagen. Installation wurde nicht gestartet.")
     
     if gotFile:
         try:
