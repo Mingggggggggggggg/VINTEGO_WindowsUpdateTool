@@ -56,10 +56,11 @@ def main():
             print("ISO Transfer erfolgreich. Starte Mount und Installation.")
             log.append("ISO Transfer erfolgreich. Starte Mount und Installation.")
             isMounted = mountInstall.initMountAndInstall(targetPath=targetPath, fileName=fileName)
+            finalizeTool.createInstalledFlag(targetPath)
             log.append("Mount und Installation gestartet. Warte auf Autoneustart.")
         except Exception as e:
             print(f"Fehler beim Mount oder Installation: {e}")
-            log.append(f"Fehler beim Mount oder Installation: {e}") 
+            log.append(f"Fehler beim Mount oder Installation: {e}")       
 
 # MAIN
 if __name__ == "__main__":
