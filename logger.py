@@ -6,27 +6,27 @@ def logMessages(name, data, folderPath=r"C:\VINTEGO-Technik\Logs", fileName="W10
     fullPath = os.path.join(folderPath, fileName)
 
     puffer = len(name)
-    dashes = (50 - puffer) // 2
+    dashes = (55 - puffer) // 2
 
     header = "-" * dashes + f" {name} " + "-" * dashes + "\n"
     footer = "-" * (dashes - 3) + f" End{name} " + "-" * (dashes - 3) + "\n"
 
-    # Erstelle den Textblock für den Log-Eintrag
-    log_block = "\n\n" + header
+
+    logBlock = "\n\n" + header
     for entry in data:
         timestamp = datetime.now().strftime("%d.%m.%Y %H:%M:%S.%f")[:-3]
-        log_block += f"{timestamp} - {entry}\n"
-    log_block += footer
+        logBlock += f"{timestamp} - {entry}\n"
+    logBlock += footer
 
     if top:
         if os.path.exists(fullPath):
             with open(fullPath, "r", encoding="utf-8") as file:
-                existing_content = file.read()
+                prevContent = file.read()
         else:
-            existing_content = ""
+            prevContent = ""
 
         with open(fullPath, "w", encoding="utf-8") as file:
-            file.write(log_block + existing_content)
+            file.write(logBlock + prevContent)
     else:
         with open(fullPath, "a", encoding="utf-8") as file:
-            file.write(log_block)
+            file.write(logBlock)
