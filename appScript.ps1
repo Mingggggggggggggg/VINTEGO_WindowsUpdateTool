@@ -2,7 +2,7 @@ $appPath = "C:\VINTEGO-Technik\Tools"
 $appUrl = "https://github.com/Mingggggggggggggg/VINTEGO_WindowsUpdateTool/releases/download/v1.2.4/Windows10-UpdateTool.exe"
 $exeFile = Join-Path -Path $appPath -ChildPath "Windows10-UpdateTool.exe"
 $logPath = "C:\Users\VINTEGO\Logs\W10UpdateToolLog.txt"
-$isoFile = Join-Path -Path $env:quellverzeichnis -ChildPath "Win11.iso"
+
 
 function runExec {
     $argList = @()
@@ -53,11 +53,16 @@ function getApp {
         Write-Output "Anwendung bereits vorhanden."
     }
 
-    if ($env:onlinedownload -eq "true") {
-        Write-Output "Online-Modus aktiviert – lade ISO-Datei von $env:quellverzeichnis herunter..."
-        Invoke-WebRequest -Uri $env:quellverzeichnis -OutFile $isoFile
+    if ($env:onlinedownload -and $env:onlinedownload.ToLower() -eq "true") {
+        if (-not $env:downloadlink) {
+            Write-Output "Fehler: downloadlink ist nicht gesetzt, ISO kann nicht heruntergeladen werden."
+            exit 1
+        }
+        $isoFile = Join-Path -Path $env:quellverzeichnis -ChildPath "Win11.iso"
+        Write-Output "Online-Modus aktiviert – lade ISO-Datei von $env:downloadlink herunter..."
+        Invoke-WebRequest -Uri $env:downloadlink -OutFile $isoFile
     } else {
-        Write-Output "Offline-Modus: Verwende Quelle unter $env:quellverzeichnis"
+        Write-Output "Offline-Modus: Verwende Quelle unter $env:downloadlink"
     }
 
     runExec

@@ -32,7 +32,11 @@ def getFile(downloadPath, fileName, targetPath):
         if not os.path.exists(fullPath):
             log.append(f"Datei nicht gefunden in: {fullPath}")
             return False
-        
+
+        if os.path.abspath(fullPath) == os.path.abspath(fullTargetPath):
+            log.append("Quell- und Zielpfad sind identisch. Kein Kopieren notwendig.")
+            return True
+
         os.makedirs(os.path.dirname(fullTargetPath), exist_ok=True)
         shutil.copy2(fullPath, fullTargetPath)
 
