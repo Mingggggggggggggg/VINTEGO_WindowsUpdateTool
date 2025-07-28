@@ -57,21 +57,6 @@ def main():
         except Exception as e:
             print(f"Fehler beim Mount oder Installation: {e}")
             log.append(f"Fehler beim Mount oder Installation: {e}") 
-    else:
-        print("Probleme beim Transfer. Beende Anwendung.")
-        log.append("Probleme beim Transfer.")
-
-# Autoneustart entfernt, da der Installationsprozess asynchron verläuft. -> Neustart während des Updates
-'''
-    if isMounted:
-        logger.logMessages(log)
-        try:
-            print("Gerät wird in 10 Sekunden neugestartet. STRG + C zum Abbrechen.")
-            time.sleep(10)
-            os.system("shutdown /r /t 0")
-        except KeyboardInterrupt:
-            print("Neustart wurde vom Nutzer abgebrochen.")
-'''
 
 # MAIN
 if __name__ == "__main__":
@@ -80,6 +65,8 @@ if __name__ == "__main__":
         log.append("Hauptprogramm durchlaufen. Anwendung wird beendet.")
         logger.logMessages("Global Log", log, top=True)
     except KeyboardInterrupt:
-        print("Anwendung beendet durch Nutzer")
+        print("Anwendung beendet durch Nutzer.")
+        log.append("Anwendung vorzeitig durch Nutzer beendet.")
+        logger.logMessages("Global Log", log, top=True)
         sys.exit()
     

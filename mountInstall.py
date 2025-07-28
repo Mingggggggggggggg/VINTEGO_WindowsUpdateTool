@@ -32,7 +32,7 @@ def mountAndInstall(ISOPath):
         log.append(f"ISO gemountet und setup.exe gestartet. PowerShell-Ausgabe: {rs.stdout}")
         return True
     except subprocess.CalledProcessError as e:
-        log.append(f"Fehler beim Mounten/Installieren: {e.stderr}")
+        log.append(f"Fehler beim Mounten/Installieren: {e.stderr or e.stdout}")
         return False
 
 def initMountAndInstall(targetPath, fileName=None):
@@ -43,11 +43,11 @@ def initMountAndInstall(targetPath, fileName=None):
             log.append(f"Kein Dateiname übergeben. Verwende ISO: {fileName}")
         elif len(iso_files) == 0:
             log.append("Keine .iso-Datei im Zielpfad gefunden.")
-            logger.logMessages(log)
+            logger.logMessages("Mount/Install", log)
             return False
         else:
             log.append("Mehrere .iso-Dateien gefunden. Dateiname erforderlich.")
-            logger.logMessages(log)
+            logger.logMessages("Mount/Install", log)
             return False   
         
     fullTargetPath = os.path.join(targetPath, fileName)

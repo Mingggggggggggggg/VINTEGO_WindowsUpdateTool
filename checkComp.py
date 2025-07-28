@@ -23,7 +23,7 @@ error = []
 
 def checkCPU():
     try:
-        coreCount = psutil.cpu_count(False)
+        coreCount  = psutil.cpu_count(False)
         maxFreq = psutil.cpu_freq()[2]
         arch = platform.architecture()[0]
         #error.append(coreCount)
@@ -202,11 +202,14 @@ def checkOSVersion():
         build = version.build  # z.B. 19041 für Windows 10 Version 2004
         error.append(f"Buildnummer: {build}")
 
-        if (build >= minOSBuildTarget) and (build < 22000):
+        if build >= 22000:
+            error.append("Windows 11 ist bereits installiert.")
+            return False
+        elif build >= minOSBuildTarget:
             error.append("Windows-Version ist ausreichend (Build 2004 oder höher)")
             return True
         else:
-            error.append(f"Windows-Version zu alt oder Windows 11 ist bereits installiert-- Build {build}; erforderlich mindestens 19041 (Version 2004) und unter 22000")
+            error.append(f"Windows-Version zu alt -- Build {build}; Erforderlich mindestens 19041")
             return False
 
     except Exception as e:
