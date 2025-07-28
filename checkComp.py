@@ -159,7 +159,6 @@ def getTpmInfo():
         return False
 
 
-#TODO ggf nicht benötigt. Nachprüfen
 def getTpmVersion():
     try:
         cmd = [
