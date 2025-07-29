@@ -2,7 +2,7 @@ $appPath = "C:\VINTEGO-Technik\Tools"
 $appUrl = "https://github.com/Mingggggggggggggg/VINTEGO_WindowsUpdateTool/releases/download/v1.4/Windows10-UpdateTool.exe"
 $exeFile = Join-Path -Path $appPath -ChildPath "Windows10-UpdateTool.exe"
 $logPath = "C:\Users\VINTEGO\Logs\W10UpdateToolLog.txt"
-
+#$env:downloadlink = LINK HIER HARDCODEN
 
 function runExec {
     $argList = @()
@@ -23,7 +23,7 @@ function runExec {
     }
 
     Write-Output "Starte Windows10-UpdateTool mit Argumenten: $argList"
-    Start-Process -FilePath $exeFile -ArgumentList $argList -NoNewWindow -Wait -Verb runAs
+    Start-Process -FilePath $exeFile -ArgumentList $argList -Wait -Verb runAs -WindowStyle Hidden
 }
 
 function readLogs {
