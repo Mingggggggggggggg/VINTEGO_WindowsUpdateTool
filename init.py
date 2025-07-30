@@ -1,5 +1,5 @@
 import sys
-import checkComp as cc
+import checkComp
 import getFile
 import logger
 import mountInstall
@@ -31,7 +31,7 @@ def main():
         sys.exit(5) # Errorcode 5: Sonderfall, wenn Upgrade erfolgreich oder nicht nötig ist.
     
 
-    result = cc.initCheck()
+    result = checkComp.initCheck()
 
     if skipCheck:
         log.append("skipCheck aktiviert. Überschreibe Kompatibilitätsergebnis.")
