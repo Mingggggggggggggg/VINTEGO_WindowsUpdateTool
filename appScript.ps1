@@ -1,8 +1,7 @@
 $appPath = "C:\VINTEGO-Technik\Tools"
-$appUrl = "https://github.com/Mingggggggggggggg/VINTEGO_WindowsUpdateTool/releases/download/v1.4/Windows10-UpdateTool.exe"
+$appUrl = "https://github.com/Mingggggggggggggg/VINTEGO_WindowsUpdateTool/releases/download/v1.5/Windows10-UpdateTool.exe"
 $exeFile = Join-Path -Path $appPath -ChildPath "Windows10-UpdateTool.exe"
 $logPath = "C:\Users\VINTEGO\Logs\W10UpdateToolLog.txt"
-#$env:downloadlink = LINK HIER HARDCODEN
 
 function runExec {
     $argList = @()
@@ -15,15 +14,21 @@ function runExec {
     }
 
     if ($env:dateinamen) {
+        $argsList += "--fileName"
         $argList += $env:dateinamen
     }
 
     if ($env:zielverzeichnis) {
+        $argsList += "--targetPath"
         $argList += $env:zielverzeichnis
     }
+    if ($env:skipcheck -and $env:skipcheck.ToLower()) {
+        $argList += "--skipCheck"
+    }
+    
 
     Write-Output "Starte Windows10-UpdateTool mit Argumenten: $argList"
-    Start-Process -FilePath $exeFile -ArgumentList $argList -Wait -Verb runAs -WindowStyle Hidden
+    Start-Process -FilePath $exeFile -ArgumentList $argList -NoNewWindow -Wait
 }
 
 function readLogs {
