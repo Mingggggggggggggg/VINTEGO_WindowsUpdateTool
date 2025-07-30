@@ -25,7 +25,7 @@ def main():
     fileName = args.fileName
     targetPath = args.targetPath
     skipCheck = args.skipCheck
-
+    
     # Wenn kein Windows 11 System und ISO im targetPath, dann wird ein Installationsfehler angenommen.
     if finalizeTool.initFinalization(targetPath, fileName):
         sys.exit(5) # Errorcode 5: Sonderfall, wenn Upgrade erfolgreich oder nicht nötig ist.

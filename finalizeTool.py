@@ -111,7 +111,7 @@ def initFinalization(ISOPath, fileName):
 
     elif not isSuccessful and isFileExist:
         log.append("[FAILURE] Windows Upgrade nicht erfolgreich. Entferne ISO und Flag, logge Fehler.")
-        deleteFile(ISOPath, foundFileName)
+        #deleteFile(ISOPath, foundFileName)
         dumpWindowsLog()
         result = False
 
