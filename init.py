@@ -15,6 +15,7 @@ def getArgs():
     parser.add_argument("downloadPath", help="[Pflichtfeld] Pfad zum Downloadverzeichnis. Beispiel: C:\\Users\\Praktikant WHV\\Downloads")
     parser.add_argument("--fileName", default="", help="[Optional] Name der ISO-Datei inklusive Datentypendung. Standardmäßig sucht einzige .iso Datei im Quellordner")
     parser.add_argument("--targetPath", default=r"C:\VINTEGO-Technik\Installer", help="[Optional] Zielpfad. Standardmäßig: C:\\VINTEGO-Technik\\Installer")
+    parser.add_argument("--skipCheck", action="store_true", help="Optional: Kompatibilitätsprüfung überspringen")
     return parser.parse_args() 
 
 def main():
@@ -23,6 +24,7 @@ def main():
     downloadPath = args.downloadPath
     fileName = args.fileName
     targetPath = args.targetPath
+    skipCheck = args.skipCheck
 
     # Wenn kein Windows 11 System und ISO im targetPath, dann wird ein Installationsfehler angenommen.
     if finalizeTool.initFinalization(targetPath, fileName):
@@ -30,8 +32,10 @@ def main():
     
 
     result = cc.initCheck()
-    # result überschreiben zu Testzwecken
-    #result = True
+
+    if skipCheck:
+        log.append("skipCheck aktiviert. Überschreibe Kompatibilitätsergebnis.")
+        result = True
 
         
     gotFile = False

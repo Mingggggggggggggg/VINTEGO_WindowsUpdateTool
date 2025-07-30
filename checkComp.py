@@ -88,19 +88,32 @@ def checkStorage():
 
 def checkSecureBoot():
     try:
+        result = subprocess.run(
+            ["powershell", "-Command", "Confirm-SecureBootUEFI"],
+            capture_output=True,
+            text=True,
+            check=True
+        )
 
-        key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, r"SYSTEM\CurrentControlSet\Control\SecureBoot\State")
-        value, _ = winreg.QueryValueEx(key, "UEFISecureBootEnabled")
-        error.append(f"SecureBoot ist vorhanden")
-        return value == 1
+        output = result.stdout.strip()
+        if output == "True":
+            error.append("Secure Boot ist aktiv.")
+            return True
+        elif output == "False":
+            error.append("Secure Boot ist deaktiviert.")
+            return False
+        else:
+            error.append(f"Unerwartete Ausgabe: {output}")
+            return False
 
-    except FileNotFoundError:
-        error.append(f"SecureBoot nicht eingestellt oder vorhanden")
+    except subprocess.CalledProcessError as e:
+        error.append(f"PowerShell-Fehler: {e.stderr.strip()}")
         return False
-    
+
     except Exception as e:
-        error.append(f"Fehler: {str(e)}")
+        error.append(f"Unbekannter Fehler: {str(e)}")
         return False
+
 
 def checkTPM():
     hasTPM = getTpmInfo()
@@ -244,4 +257,3 @@ def initCheck():
         logger.logMessages("Kompatiblilitätscheck Log",error)
 
     return result  
-   
