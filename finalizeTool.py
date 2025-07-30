@@ -92,35 +92,43 @@ def checkInstalledFlag(ISOPath):
     return exists
 
 def initFinalization(ISOPath, fileName):
-    isSuccessful = checkSuccess()
-    isFileExist, foundFileName = checkFile(ISOPath, fileName)
-    flagPath = os.path.join(ISOPath, "installed.flag")
-    result = False
-
-    if isSuccessful and isFileExist:
-        log.append("[SUCCESS] Windows Upgrade erfolgreich. ISO und Flag werden entfernt.")
-        deleteFile(ISOPath, foundFileName)  
-        result = True
-
-    elif isSuccessful and not isFileExist:
-        log.append("[SUCCESS] Windows Upgrade erfolgreich. ISO nicht gefunden. Entferne Flag.")
-        if os.path.exists(flagPath):
-            os.remove(flagPath)
-            log.append("Flag-Datei 'installed.flag' wurde entfernt.")
-        result = True
-
-    elif not isSuccessful and isFileExist:
-        log.append("[FAILURE] Windows Upgrade nicht erfolgreich. Entferne ISO und Flag, logge Fehler.")
-        #deleteFile(ISOPath, foundFileName)
-        dumpWindowsLog()
+    flagExist = checkInstalledFlag(ISOPath)
+    if flagExist:
+        isSuccessful = checkSuccess()
+        isFileExist, foundFileName = checkFile(ISOPath, fileName)
+        flagPath = os.path.join(ISOPath, "installed.flag")
         result = False
 
-    elif not isSuccessful and not isFileExist:
-        log.append("[FAILURE] Windows Upgrade nicht erfolgreich. ISO nicht gefunden. Entferne Flag und logge Fehler.")
-        if os.path.exists(flagPath):
-            os.remove(flagPath)
-            log.append("Flag-Datei 'installed.flag' wurde entfernt.")
-        dumpWindowsLog()
+        if isSuccessful and isFileExist:
+            log.append("[SUCCESS] Windows Upgrade erfolgreich. ISO und Flag werden entfernt.")
+            deleteFile(ISOPath, foundFileName)  
+            result = True
+
+        elif isSuccessful and not isFileExist:
+            log.append("[SUCCESS] Windows Upgrade erfolgreich. ISO nicht gefunden. Entferne Flag.")
+            if os.path.exists(flagPath):
+                os.remove(flagPath)
+                log.append("Flag-Datei 'installed.flag' wurde entfernt.")
+            result = True
+
+        elif not isSuccessful and isFileExist:
+            log.append("[FAILURE] Windows Upgrade nicht erfolgreich. Entferne Flag, logge Fehler.")
+            #deleteFile(ISOPath, foundFileName)
+            if os.path.exists(flagPath):
+                os.remove(flagPath)
+                log.append("Flag-Datei 'installed.flag' wurde entfernt.")
+            dumpWindowsLog()
+            result = False
+
+        elif not isSuccessful and not isFileExist:
+            log.append("[FAILURE] Windows Upgrade nicht erfolgreich. ISO nicht gefunden. Entferne Flag und logge Fehler.")
+            if os.path.exists(flagPath):
+                os.remove(flagPath)
+                log.append("Flag-Datei 'installed.flag' wurde entfernt.")
+            dumpWindowsLog()
+            result = False
+    else:
+        log.append("Flag existiert nicht. Vermutlich Erststart. Starte restliche Anwendung.")
         result = False
 
     logger.logMessages("Windows Status", log, top=True)
