@@ -1,28 +1,23 @@
 $appPath = "C:\VINTEGO-Technik\Tools"
-$appUrl = "https://github.com/Mingggggggggggggg/VINTEGO_WindowsUpdateTool/releases/download/v1.5/Windows10-UpdateTool.exe"
+$appUrl = "https://github.com/Mingggggggggggggg/VINTEGO_WindowsUpdateTool/releases/download/v1.6/Windows10-UpdateTool.exe"
 $exeFile = Join-Path -Path $appPath -ChildPath "Windows10-UpdateTool.exe"
 $logPath = "C:\Users\VINTEGO\Logs\W10UpdateToolLog.txt"
 
 function runExec {
     $argList = @()
-
-    if ($env:quellverzeichnis) {
-        $argList += $env:quellverzeichnis
-    } else {
-        Write-Output "Fehler: Kein Quellverzeichnis angegeben."
-        exit 1
-    }
-
+    $argList += $env:quellverzeichnis 
+    
     if ($env:dateinamen) {
-        $argsList += "--fileName"
+        $argList += "--fileName"
         $argList += $env:dateinamen
     }
-
+    
     if ($env:zielverzeichnis) {
-        $argsList += "--targetPath"
+        $argList += "--targetPath"
         $argList += $env:zielverzeichnis
     }
-    if ($env:skipcheck -and $env:skipcheck.ToLower()) {
+    
+    if ($env:skipcheck) {
         $argList += "--skipCheck"
     }
     
@@ -30,6 +25,7 @@ function runExec {
     Write-Output "Starte Windows10-UpdateTool mit Argumenten: $argList"
     Start-Process -FilePath $exeFile -ArgumentList $argList -NoNewWindow -Wait
 }
+
 
 function readLogs {
     if (Test-Path $logPath) {
