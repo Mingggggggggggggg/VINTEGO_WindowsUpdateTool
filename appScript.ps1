@@ -1,7 +1,7 @@
 $appPath = "C:\VINTEGO-Technik\Tools"
-$appUrl = "https://github.com/Mingggggggggggggg/VINTEGO_WindowsUpdateTool/releases/download/v1.6/Windows10-UpdateTool.exe"
+$appUrl = "https://github.com/Mingggggggggggggg/VINTEGO_WindowsUpdateTool/releases/download/v2.0/Windows10-UpdateTool.exe"
 $exeFile = Join-Path -Path $appPath -ChildPath "Windows10-UpdateTool.exe"
-$logPath = "C:\Users\VINTEGO\Logs\W10UpdateToolLog.txt"
+$logPath = "C:\VINTEGO-Technik\Logs\W10UpdateToolLog.txt"
 
 function runExec {
     $argList = @()
